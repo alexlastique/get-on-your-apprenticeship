@@ -30,6 +30,11 @@ table{
   transform: translateX(-50%);
 }
 
+.btnTable{
+  position: fixed;
+  bottom: 0;
+}
+
 .App-logo{
   height: 15vw;
   position: absolute;

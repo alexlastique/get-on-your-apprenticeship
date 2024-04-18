@@ -43,6 +43,9 @@ function App() {
     Alive: 'All'
   });
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const rowsPerPage = 10; // Nombre de lignes par page
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -61,13 +64,68 @@ function App() {
     fetchStudents();
   }, []);
 
+  const nextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const previousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const renderRows = () => {
+    const filteredStudents = students.filter(student =>
+      (formData.Species === 'All' || student.species === formData.Species) &&
+      (formData.Gender === "All" || student.gender === formData.Gender) &&
+      (formData.House === "All" || student.house === formData.House) &&
+      (formData.Ancestry === "All" || student.ancestry === formData.Ancestry) &&
+      (formData.EyeColour === "All" || student.eyeColour === formData.EyeColour) &&
+      (formData.HairColour === "All" || student.hairColour === formData.HairColour) &&
+      (formData.Student === "All" || (student.hogwartsStudent ? "true" : "false") === formData.Student) &&
+      (formData.Staff === "All" || (student.hogwartsStaff ? "true" : "false") === formData.Staff) &&
+      (formData.Alive === "All" || (student.alive ? "true" : "false") === formData.Alive)
+    );
+  
+    const startIndex = currentPage * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, filteredStudents.length);
+  
+    return filteredStudents.slice(startIndex, endIndex).map(student => (
+      <tr key={crypto.randomUUID()}>
+        {Object.keys(isVisible).map(columnName => (
+          isVisible[columnName] && (
+            <td key={columnName} className={columnName}>
+              {columnName === 'Wand' ? (student.wand && Object.entries(student.wand)[0][1].length > 0 ? Object.entries(student.wand).map(([key, value]) => value !== "" ? `${key}=${value}`: "none").join(", ") : "none") : 
+                (columnName === 'DateOfBirth' ? (student.dateOfBirth || student.yearOfBirth || "none") : 
+                columnName === 'AlternateName' ? (student.alternate_names && student.alternate_names.length > 0? student.alternate_names.join(", ") : "none") :
+                columnName === 'Wizard' ? (student.wizard ? "true" : "false") :
+                columnName === 'EyeColour' ? (student.eyeColour ? student.eyeColour : "none") :
+                columnName === 'HairColour' ? (student.hairColour ? student.hairColour : "none") :
+                columnName === 'Student' ? (student.hogwartsStudent ? "true" : "false") :
+                columnName === 'Staff' ? (student.hogwartsStaff ? "true" : "false") :
+                columnName === 'AlternateActor' ? (student.alternate_actors && student.alternate_actors.length > 0? student.alternate_actors.join(", ") : "none") :
+                columnName === 'Alive' ? (student.alive ? "true" : "false") :
+                columnName === 'Image' ? (<img className="imagesize" src={student.image ? student.image : "https://i.pinimg.com/736x/d2/c7/40/d2c740bfc010b50918520013c420523b.jpg"} alt="image" />) :
+                (student[columnName.toLowerCase()] || "none"))
+              }
+            </td>
+          )
+        ))}
+      </tr>
+    ));
+  };
+  
+  const totalPages = Math.ceil(students ? students.length / rowsPerPage : 0);
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Here is a list of all characters:</p>
         <div className="App-intro">
-          <form>
+        <form>
             <label htmlFor="Species">Species : </label>
             <select name="Species" id="Species" onChange={handleChange} value={formData.Species}>
               <option value="All">All</option>
@@ -182,33 +240,13 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {students ? students.map(student => (
-                <tr key={crypto.randomUUID()}>
-                  {(formData.Species == 'All' || student.species == formData.Species) && (formData.Gender == "All" || student.gender == formData.Gender) && (formData.House == "All"|| student.house == formData.House) && (formData.Ancestry == "All"|| student.ancestry == formData.Ancestry) && (formData.EyeColour == "All"|| student.eyeColour == formData.EyeColour) && (formData.HairColour == "All"|| student.hairColour == formData.HairColour) && (formData.Student == "All"|| (student.hogwartsStudent ? "true":"false") == formData.Student) && (formData.Staff == "All"|| (student.hogwartsStaff ? "true":"false") == formData.Staff) && (formData.Alive == "All"|| (student.alive ? "true":"false") == formData.Alive)?
-                    Object.keys(isVisible).map(columnName => (
-                      isVisible[columnName] && (
-                        <td key={columnName} className={columnName}>
-                          {columnName === 'Wand' ? (student.wand && Object.entries(student.wand)[0][1].length > 0 ? Object.entries(student.wand).map(([key, value]) => value != "" ? `${key}=${value}`: "none").join(", ") : "none") : 
-                            (columnName === 'DateOfBirth' ? (student.dateOfBirth || student.yearOfBirth || "none") : 
-                            columnName === 'AlternateName' ? (student.alternate_names && student.alternate_names.length > 0? student.alternate_names.join(", ") : "none") :
-                            columnName === 'Wizard' ? (student.wizard ? "true" : "false") :
-                            columnName === 'EyeColour' ? (student.eyeColour ? student.eyeColour : "none") :
-                            columnName === 'HairColour' ? (student.hairColour ? student.hairColour : "none") :
-                            columnName === 'Student' ? (student.hogwartsStudent ? "true" : "false") :
-                            columnName === 'Staff' ? (student.hogwartsStaff ? "true" : "false") :
-                            columnName === 'AlternateActor' ? (student.alternate_actors && student.alternate_actors.length > 0? student.alternate_actors.join(", ") : "none") :
-                            columnName === 'Alive' ? (student.alive ? "true" : "false") :
-                            columnName === 'Image' ? (<img className="imagesize" src={student.image ? student.image : "https://i.pinimg.com/736x/d2/c7/40/d2c740bfc010b50918520013c420523b.jpg"} alt="image" />) :
-                            (student[columnName.toLowerCase()] || "none"))
-                          }
-                        </td>
-                      )
-                    ))
-                  : console.log(toString(student.hogwartsStudent), formData.Student)}
-                </tr>
-              )) : <tr><td colSpan={Object.keys(isVisible).length}>Loading...</td></tr>}
+              {students ? renderRows() : <tr><td colSpan={Object.keys(isVisible).length}>Loading...</td></tr>}
             </tbody>
           </table>
+        </div>
+        <div className='btnTable' id="pagination">
+          <button onClick={previousPage}>Previous</button>
+          <button onClick={nextPage}>Next</button>
         </div>
       </header>
     </div>
