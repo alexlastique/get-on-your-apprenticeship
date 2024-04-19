@@ -75,7 +75,7 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 47vh;
 }
 
 h1 {
@@ -112,5 +112,49 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media only screen and (max-width:1540px){
+  .Student, .Staff, .AlternateActor, .AlternateName, .Image{
+    display: none;
+  }
+}
+@media only screen and (max-width:1017px){
+  .Wand{
+    display: none;
+  }
+}
+@media only screen and (max-width:888px){
+  .DateOfBirth{
+    display: none;
+  }
+  .App-header p{
+    padding-top: 0vw;
+  }
+}
+@media only screen and (max-width:788px){
+  .EyeColour, .HairColour{
+    display: none;
+  }
+}
+@media only screen and (max-width:630px){
+  .Actor{
+    display: none;
+  }
+}
+@media only screen and (max-width:552px){
+  .Alive{
+    display: none;
+  }
+}
+@media only screen and (max-width:521px){
+  .Gender{
+    display: none;
+  }
+}
+@media only screen and (max-width:463px){
+  .Wizard{
+    display: none;
   }
 }
