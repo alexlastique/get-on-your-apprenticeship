@@ -1,3 +1,7 @@
+[[headers]]
+  for = "/*" # you can configure the correct paths here
+  [headers.values]
+    access-control-allow-origin = "*"
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
