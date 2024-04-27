@@ -8,19 +8,19 @@ function App() {
     Name: true,
     AlternateName: true,
     Species: true,
-    Gender: true,
+    Gender: false,
     House: true,
     DateOfBirth: true,
-    Wizard: true,
+    Wizard: false,
     Ancestry: true,
-    EyeColour: true,
-    HairColour: true,
+    EyeColour: false,
+    HairColour: false,
     Wand: true,
     Patronus: true,
-    Student: true,
-    Staff: true,
+    Student: false,
+    Staff: false,
     Actor: true,
-    AlternateActor: true,
+    AlternateActor: false,
     Alive: true,
     Image: true
   });
@@ -56,7 +56,7 @@ function App() {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch('http://localhost:3000/real/students');
+      const response = await fetch('https://alexlastique.netlify.app/api?param=students');
       const data = await response.json();
       setStudents(data);
     };
@@ -229,7 +229,7 @@ function App() {
             </select>
           </form>
           {Object.keys(isVisible).map(columnName => (
-            <button className={columnName} key={columnName} style={isVisible[columnName]? "background-color : #f9f9f9":"background-color : red"} onClick={() => toggleVisibility(columnName)}>{columnName}</button>
+            <button className={columnName} key={columnName} style={{ backgroundColor: isVisible[columnName] ? "#f9f9f9" : "red" }} onClick={() => toggleVisibility(columnName)}>{columnName}</button>
           ))}
           <table>
             <thead>
