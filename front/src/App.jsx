@@ -229,7 +229,7 @@ function App() {
             </select>
           </form>
           {Object.keys(isVisible).map(columnName => (
-            <button className={columnName} key={columnName} onClick={() => toggleVisibility(columnName)}>{columnName}</button>
+            <button className={columnName} key={columnName} style={isVisible[columnName]? "background-color : #f9f9f9":"background-color : red"} onClick={() => toggleVisibility(columnName)}>{columnName}</button>
           ))}
           <table>
             <thead>
