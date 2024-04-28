@@ -3,7 +3,9 @@ import logo from './assets/hogwarts.png';
 import './App.css';
 
 function App() {
-  
+
+  var endIndex = 10
+
   const [isVisible, setIsVisible] = useState({
     Name: true,
     AlternateName: true,
@@ -28,8 +30,14 @@ function App() {
   const toggleVisibility = (columnName) => {
     setIsVisible({...isVisible, [columnName]: !isVisible[columnName]});
   };
+  const GetRandomStudents = async () => {
+    const response = await fetch('https://alexlastique.netlify.app/api?param=randomstudent');
+    const data = await response.json();
+    setRandomStudents(data);
+  };
 
   const [students, setStudents] = useState(null);
+  const [randomStudents, setRandomStudents] = useState(null);
 
   const [formData, setFormData] = useState({
     Species: 'All',
@@ -52,6 +60,7 @@ function App() {
       ...formData,
       [name]: value
     });
+    setCurrentPage(0);
   };
 
   useEffect(() => {
@@ -65,7 +74,7 @@ function App() {
   }, []);
 
   const nextPage = () => {
-    if (currentPage < totalPages - 1) {
+    if (currentPage < totalPages - 1 && endIndex>=9) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -90,7 +99,7 @@ function App() {
     );
   
     const startIndex = currentPage * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, filteredStudents.length);
+    endIndex = Math.min(startIndex + rowsPerPage, filteredStudents.length);
   
     return filteredStudents.slice(startIndex, endIndex).map(student => (
       <tr key={crypto.randomUUID()}>
@@ -243,6 +252,17 @@ function App() {
               {students ? renderRows() : <tr><td colSpan={Object.keys(isVisible).length}>Loading...</td></tr>}
             </tbody>
           </table>
+        </div>
+        <div className='random_student'>
+          <span>Here a random student :</span>
+          <div>
+            <img className='imagesize' src={randomStudents ? randomStudents.image ? randomStudents.image : "https://i.pinimg.com/736x/d2/c7/40/d2c740bfc010b50918520013c420523b.jpg":"https://i.pinimg.com/736x/d2/c7/40/d2c740bfc010b50918520013c420523b.jpg"} alt="images" /><br/>
+            <span>Name : {randomStudents ? randomStudents.name ? randomStudents.name : "Not know" : "Not generate"}</span><br/>
+            <span>House : {randomStudents ? randomStudents.house ? randomStudents.house : "Not know" : "Not generate"}</span><br/>
+            <span>Date of birth : {randomStudents ? randomStudents.dateOfBirth ? randomStudents.dateOfBirth : "Not know" : "Not generate"}</span><br/>
+            {randomStudents ? console.log(randomStudents) : console.log(randomStudents)}
+            <button className="random" onClick={() => GetRandomStudents()}>Regen</button>
+          </div>
         </div>
         <div className='btnTable' id="pagination">
           <button onClick={previousPage}>Previous</button>

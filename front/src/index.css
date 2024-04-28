@@ -17,6 +17,13 @@ html {
   background-attachment: fixed;
 }
 
+.random_student {
+  font-size: 1vw;
+  font-weight: 900;
+  position: absolute;
+  top: 0;
+}
+
 td, th {
   border: white solid;
   border-width: 1px;
